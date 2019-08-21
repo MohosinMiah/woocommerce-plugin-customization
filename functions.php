@@ -600,6 +600,7 @@ function six_woocommerce_after_cart_totals(){
 function tutsplus_product_subcategories( $args = array() ) {
 
 
+	// print_r( get_queried_object_id())
 	$parentid = get_queried_object_id();
          
 	$args = array(
@@ -610,11 +611,11 @@ function tutsplus_product_subcategories( $args = array() ) {
 	 
 	if ( $terms ) {
 			 
-		echo '<ul class="product-cats">';
+		echo '<ul class="row">';
 		 
 			foreach ( $terms as $term ) {
 							 
-				echo '<li class="category">';                 
+				echo '<li class="category col-md-4" style="width:300px;float:right;">';                 
 						 
 					
 					 	echo '<a href="' .  esc_url( get_term_link( $term ) ) . '" class="' . $term->slug . '">';
@@ -669,3 +670,21 @@ function my_shipping_tab_callback()
 	
 }
 // Add New Tab For Related Products ********* End ***************************************** *************************************************
+
+
+
+
+
+
+/**
+ * Change number or products per row 
+ */
+add_filter('loop_shop_columns', 'loop_columns', 999);
+if (!function_exists('loop_columns')) {
+	function loop_columns() {
+		return 4; // 3 products per row
+	}
+}
+
+
+

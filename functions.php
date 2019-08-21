@@ -577,8 +577,95 @@ add_filter( 'widget_tag_cloud_args', 'twentysixteen_widget_tag_cloud_args' );
 
 
 
-// //Remove Title 
+//Remove Title 
 // remove_action("woocommerce_single_product_summary", "woocommerce_template_single_title", 5);
 
 // //Change Priority Shedule
-// add_action("woocommerce_single_product_summary", "woocommerce_template_single_title", 35);
+
+add_action("woocommerce_after_single_product_summary", "woocommerce_template_single_title", 35);
+add_action("woocommerce_after_single_product_summary", "woocommerce_template_single_excerpt", 45);
+
+
+
+//After Cardt Total
+add_action( "woocommerce_after_cart_totals", "six_woocommerce_after_cart_totals");
+
+
+function six_woocommerce_after_cart_totals(){
+	echo  "woocommerce_after_cart_totals";
+}
+
+
+
+function tutsplus_product_subcategories( $args = array() ) {
+
+
+	$parentid = get_queried_object_id();
+         
+	$args = array(
+		'parent' => $parentid
+	);
+	 
+	$terms = get_terms( 'product_cat', $args );
+	 
+	if ( $terms ) {
+			 
+		echo '<ul class="product-cats">';
+		 
+			foreach ( $terms as $term ) {
+							 
+				echo '<li class="category">';                 
+						 
+					
+					 	echo '<a href="' .  esc_url( get_term_link( $term ) ) . '" class="' . $term->slug . '">';
+						 woocommerce_subcategory_thumbnail( $term );
+						echo '</a>';
+
+					echo '<h2>';
+						echo '<a href="' .  esc_url( get_term_link( $term ) ) . '" class="' . $term->slug . '">';
+							echo $term->name;
+						echo '</a>';
+					echo '</h2>';
+																		 
+				echo '</li>';
+																		 
+	 
+		}
+		 
+		echo '</ul>';
+	 
+	}  
+}
+
+add_action( 'woocommerce_before_shop_loop', 'tutsplus_product_subcategories', 50 );
+
+
+// Add New Tab For Related Products ********* Start ***************************************** *************************************************
+add_filter( 'woocommerce_product_tabs', 'my_shipping_tab' );
+function my_shipping_tab( $tabs ) {
+    // Adds the new tabstart
+    $tabs['shipping'] = array(
+        'title'     => __( 'Related Products', 'child-theme' ),
+        'priority'  => 50,
+        'callback'  => 'my_shipping_tab_callback'
+    );
+    return $tabs;
+}
+
+
+function my_shipping_tab_callback()
+{
+	global $product;
+
+	if( ! is_a( $product, 'WC_Product' ) ){
+		$product = wc_get_product(get_the_id());
+	}
+	
+	woocommerce_related_products( array(
+		'posts_per_page' => 4,
+		'columns'        => 4,
+		'orderby'        => 'rand'
+	) );
+	
+}
+// Add New Tab For Related Products ********* End ***************************************** *************************************************

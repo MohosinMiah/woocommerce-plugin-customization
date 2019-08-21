@@ -29,5 +29,5 @@ if ( ! $short_description ) {
 
 ?>
 <div class="woocommerce-product-details__short-description">
-	<?php echo strtoupper($short_description); // WPCS: XSS ok. ?>
+	<?php echo "<span style='color:green'> " . strtoupper($short_description)."</span>"; // WPCS: XSS ok. ?>
 </div>

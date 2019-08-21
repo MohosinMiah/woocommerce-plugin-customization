@@ -600,7 +600,6 @@ function six_woocommerce_after_cart_totals(){
 function tutsplus_product_subcategories( $args = array() ) {
 
 
-	// print_r( get_queried_object_id())
 	$parentid = get_queried_object_id();
          
 	$args = array(
@@ -608,7 +607,10 @@ function tutsplus_product_subcategories( $args = array() ) {
 	);
 	 
 	$terms = get_terms( 'product_cat', $args );
-	 
+		//  echo "<pre>";
+		//  print_r( $terms);
+		//  echo "</pre>";
+
 	if ( $terms ) {
 			 
 		echo '<ul class="row">';
@@ -707,3 +709,30 @@ function custom_pre_get_posts_query( $q ) {
 
 }
 add_action( 'woocommerce_product_query', 'custom_pre_get_posts_query' );  
+
+
+
+
+
+/* WooCommerce: The Code Below Removes Checkout Fields */
+
+add_filter( 'woocommerce_checkout_fields' , 'custom_override_checkout_fields' );
+
+function custom_override_checkout_fields( $fields ) {
+// unset($fields['billing']['billing_first_name']);
+// unset($fields['billing']['billing_last_name']);
+unset($fields['billing']['billing_company']);
+unset($fields['billing']['billing_address_1']);
+unset($fields['billing']['billing_address_2']);
+unset($fields['billing']['billing_city']);
+// unset($fields['billing']['billing_postcode']);
+unset($fields['billing']['billing_country']);
+unset($fields['billing']['billing_state']);
+// unset($fields['billing']['billing_phone']);
+unset($fields['order']['order_comments']);
+// unset($fields['billing']['billing_email']);
+unset($fields['account']['account_username']);
+unset($fields['account']['account_password']);
+unset($fields['account']['account_password-2']);
+return $fields;
+}
